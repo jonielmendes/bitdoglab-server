@@ -1,96 +1,132 @@
 # Projeto IoT com Raspberry Pi Pico e ThingSpeak
 
-Este projeto utiliza um Raspberry Pi Pico para monitorar os status de botões e a posição do joystick da placa Bitdoglab. Os dados dos botões e do joystick são enviados para um servidor a cada 1 segundo. Como um desafio extra, um sensor foi adicionado para enviar seus dados para o servidor. Além disso, uma rosa dos ventos imaginária foi criada para representar a posição selecionada no joystick.
+Este projeto utiliza um Raspberry Pi Pico para monitorar dois botões, a posição de um joystick e a temperatura interna do microcontrolador. Os dados são enviados periodicamente para a nuvem (ThingSpeak), permitindo visualização em tempo real por meio de gráficos e painéis personalizados.
 
-## Funcionalidades
+## 🧩 Funcionalidades
 
-### 1. Leitura de Status dos Botões
-O programa monitora os estados dos botões da placa Bitdoglab e envia, a cada 1 segundo, os status para um servidor. 
+- **Leitura dos botões (GPIO 5 e 6)**: Captura o estado (pressionado/solto).
+- **Leitura do joystick (ADC 0 e 1)**: Interpretação de direção (rosa dos ventos).
+- **Leitura da temperatura interna (ADC 4)**: Conversão para °C.
+- **Envio de dados para o ThingSpeak**: Via requisição HTTP GET a cada 15 segundos.
+- **Servidor Web local (versão anterior)**: Exibição dos dados em HTML via rede local.
+- **Exemplo de aplicação real**: Simulação de monitoramento industrial.
 
-### 2. Leitura da Posição do Joystick
-A posição X e Y do joystick da placa Bitdoglab é lida e enviada para um servidor via Wi-Fi. Além disso, a posição do joystick é mapeada para uma rosa dos ventos imaginária, que inclui as direções: 
-- Norte
-- Sul
-- Leste
-- Oeste
-- Nordeste
-- Sudeste
-- Noroeste
-- Sudoeste
+## 🔌 Pinos Utilizados
 
-### 3. Desafio Extra: Envio de Dados de Sensor
-Um sensor adicional foi integrado ao sistema, e seus dados são enviados ao servidor juntamente com os status dos botões e as posições do joystick.
+| Função                | Pino do Pico     |
+|-----------------------|------------------|
+| Botão A               | GPIO 5           |
+| Botão B               | GPIO 6           |
+| Joystick X            | ADC 1 (GPIO 27)  |
+| Joystick Y            | ADC 0 (GPIO 26)  |
+| Sensor de Temperatura | ADC 4            |
+| LED Indicador         | GPIO 20          |
 
-### 4. Desafio Adicional: Servidor na Nuvem
-O código foi refeito para enviar os dados para um servidor na nuvem. O ThingSpeak foi utilizado para monitorar os dados dos sensores, mas também foi feito um exemplo de integração com outros servidores na nuvem como AWS ou Google.
+## 🌐 Configuração de Rede
 
-## Estrutura do Projeto
+> ⚠️ **Importante:** Antes de compilar, edite o código e preencha suas informações de Wi-Fi e chave da API do ThingSpeak:
 
-### Pinos Utilizados:
+```c
+#define WIFI_SSID           "SEU_SSID_AQUI"
+#define WIFI_PASSWORD       "SUA_SENHA_AQUI"
+#define THINGSPEAK_API_KEY  "SUA_API_KEY_AQUI"
+#define THINGSPEAK_HOST     "api.thingspeak.com"
+```
 
-- **Pino 5 e 6:** Botões de entrada (BUTTON1_PIN, BUTTON2_PIN)
-- **Pino 20:** LED de saída (LED_PIN)
-- **Pino 27 e 26:** Joystick (JOYSTICK_X, JOYSTICK_Y)
-- **Pino 4:** Sensor (desafio extra)
+## 🧭 Mapeamento da Rosa dos Ventos com o Joystick
 
-### Configuração de Rede:
+O joystick retorna valores analógicos nos eixos **X** e **Y**, de 0 a 4095. Esses valores são mapeados para direções de uma rosa dos ventos, com base em limites definidos no código.
 
-- **Wi-Fi SSID:** `TESTE2`
-- **Wi-Fi Senha:** `#Akatsuki`
-- **ThingSpeak API Key:** `4G8XNIL18230JBI5`
-- **ThingSpeak Host:** `api.thingspeak.com`
+### 🎯 Direções possíveis
 
-### Bibliotecas Utilizadas:
+```
+         Norte
+           ↑
+  Noroeste ↑↑↑ Nordeste
+           ↑
+Oeste ←── Centro ──→ Leste
+           ↓
+  Sudoeste ↓↓↓ Sudeste
+           ↓
+         Sul
+```
 
-- **pico/cyw43_arch.h:** Para interação com o Wi-Fi do Raspberry Pi Pico.
-- **pico/stdlib.h:** Funções padrão para controle do hardware e entrada/saída.
-- **hardware/adc.h:** Para ler os valores dos sensores analógicos.
-- **lwip/tcp.h:** Para comunicação TCP.
-- **lwip/dns.h:** Para resolução DNS ao enviar dados para o servidor na nuvem (ThingSpeak ou outros).
+### 📊 Faixas de valores (exemplo)
 
-## Funcionalidade Principal
+| Direção     | X         | Y         |
+|-------------|-----------|-----------|
+| Norte       | ~2000     | >3500     |
+| Sul         | ~2000     | <1000     |
+| Leste       | >3500     | ~2000     |
+| Oeste       | <1000     | ~2000     |
+| Nordeste    | >3000     | >3000     |
+| Noroeste    | <1000     | >3000     |
+| Sudeste     | >3000     | <1000     |
+| Sudoeste    | <1000     | <1000     |
+| Centro      | 1800–2300 | 1800–2300 |
 
-### 1. Monitoramento dos Sensores:
-- O status dos botões e os valores do joystick são lidos constantemente.
-- Um sensor adicional foi integrado, e seus dados também são enviados para o servidor.
+> ⚙️ Ajuste os limites conforme o comportamento real do seu joystick.
 
-### 2. Envio de Dados para o Servidor:
-- Os dados coletados dos sensores são formatados e enviados para um servidor a cada 1 segundo.
-- O servidor na nuvem (ThingSpeak ou outro) exibe os dados em tempo real.
+## ☁️ Envio para ThingSpeak
 
-### 3. Mapeamento da Rosa dos Ventos:
-- A posição do joystick é mapeada para uma rosa dos ventos imaginária e enviada para o servidor.
-  
-### 4. Servidor na Nuvem:
-- O projeto foi adaptado para enviar dados para um servidor na nuvem, como ThingSpeak, mas a estrutura do código pode ser facilmente modificada para outros servidores, como AWS ou Google Cloud.
+Os dados dos sensores são enviados a cada 15 segundos (limite da conta gratuita no ThingSpeak) usando uma requisição HTTP GET.
 
-## Como Rodar o Projeto
+### 🧾 Exemplo de requisição:
 
-### 1. Preparar o Ambiente:
-- Certifique-se de que o Raspberry Pi Pico esteja configurado corretamente com o SDK do Raspberry Pi Pico.
-- Conecte os sensores e os botões aos pinos apropriados do Raspberry Pi Pico.
+```http
+GET /update?api_key=SUA_API_KEY&field1=BOTAO_A&field2=BOTAO_B&field3=TEMP&field4=JOY_X&field5=JOY_Y HTTP/1.1
+Host: api.thingspeak.com
+Connection: close
+```
 
-### 2. Compilar e Carregar:
-- Compile o código utilizando o ambiente de desenvolvimento do Raspberry Pi Pico.
-- Carregue o código no Raspberry Pi Pico.
+## 🖥️ Como Rodar o Projeto
 
-### 3. Conectar ao Wi-Fi:
-- O projeto se conecta automaticamente à rede Wi-Fi configurada (`TESTE2` e `#Akatsuki`).
+### ✅ Pré-requisitos
 
-### 4. Monitorar os Dados:
-- O Raspberry Pi Pico enviará os dados para o servidor a cada 1 segundo.
-- Você pode acessar o servidor (ThingSpeak ou outro) para visualizar os dados em tempo real.
+- SDK do Raspberry Pi Pico configurado
+- Pilha LWIP funcional
+- Acesso à internet via Wi-Fi
 
-### 5. Servidor na Nuvem:
-- Para visualizar os dados na nuvem, configure o ThingSpeak ou outro servidor de sua preferência para receber os dados. A chave API de ThingSpeak já está configurada no código.
+### ⚙️ Configuração
 
-## Desafios Realizados
+Edite no código:
 
-- **Desafio 1:** Envio dos dados dos botões e joystick para o servidor.
-- **Desafio 2:** Adição de um sensor extra e envio de seus dados para o servidor.
-- **Desafio 3:** Criação de uma rosa dos ventos imaginária e envio da direção selecionada pelo joystick.
-- **Desafio 4:** Migração do servidor local para um servidor na nuvem (ThingSpeak e servidores como AWS ou Google).
+```c
+#define WIFI_SSID "SEU_SSID"
+#define WIFI_PASSWORD "SUA_SENHA"
+#define THINGSPEAK_API_KEY "SUA_CHAVE_THINGSPEAK"
+```
 
-## Contribuindo
+### 🧪 Compilação
 
-Se você deseja contribuir para este projeto, sinta-se à vontade para abrir issues e pull requests. Você pode melhorar a leitura de sensores, adicionar novos sensores ou modificar a visualização na nuvem.
+```bash
+mkdir build
+cd build
+cmake ..
+make
+```
+
+### 🚀 Upload para o Pico
+
+- Use o `picotool`, ou
+- Copie o arquivo `.uf2` gerado para o Raspberry Pi Pico via USB
+
+### 📡 Visualização
+
+- Acesse [ThingSpeak](https://thingspeak.com/)
+- Veja os campos atualizados em tempo real com:
+  - Botões A e B (pressionado ou solto)
+  - Temperatura em °C
+  - Eixos X e Y do joystick
+
+## 💡 Aplicações Reais
+
+Este projeto pode ser usado em:
+
+- 🏭 Monitoramento remoto de máquinas e ambientes
+- 🧪 Testes educacionais com sensores e IoT
+- 🚀 Prototipagem de sistemas embarcados
+
+
+
+
