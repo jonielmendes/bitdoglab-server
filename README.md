@@ -7,8 +7,8 @@ Este projeto utiliza um Raspberry Pi Pico para monitorar dois botões, a posiç�
 - **Leitura dos botões (GPIO 5 e 6)**: Captura o estado (pressionado/solto).
 - **Leitura do joystick (ADC 0 e 1)**: Interpretação de direção (rosa dos ventos).
 - **Leitura da temperatura interna (ADC 4)**: Conversão para °C.
-- **Envio de dados para o ThingSpeak**: Via requisição HTTP GET a cada 15 segundos.
-- **Servidor Web local (versão anterior)**: Exibição dos dados em HTML via rede local.
+- **Envio de dados para o ThingSpeak(versão nuvem)**: Via requisição HTTP GET a cada 15 segundos.
+- **Servidor Web local (versão local)**: Exibição dos dados em HTML via rede local a cada 1 segundo.
 - **Exemplo de aplicação real**: Simulação de monitoramento industrial.
 
 ## 🔌 Pinos Utilizados
