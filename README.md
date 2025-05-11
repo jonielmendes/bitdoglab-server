@@ -127,6 +127,9 @@ Este projeto pode ser usado em:
 - 🧪 Testes educacionais com sensores e IoT
 - 🚀 Prototipagem de sistemas embarcados
 
+  ## Para mais detalhes e resultados visuais, acesse o [Wiki](https://github.com/jonielmendes/bitdoglab-server/wiki/Monitoramento-IoT-com-Raspberry-Pi-Pico-e-ThingSpeak).
+
+
 ## Contato
 
 📧 **Email**: jonielmendes237@gmail.com
