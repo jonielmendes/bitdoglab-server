@@ -113,7 +113,7 @@ make
 
 ### 📡 Visualização
 
-- Acesse [ThingSpeak](https://thingspeak.com/)
+- Acesse [ThingSpeak](https://thingspeak.mathworks.com/channels/2954999)
 - Veja os campos atualizados em tempo real com:
   - Botões A e B (pressionado ou solto)
   - Temperatura em °C
