@@ -127,6 +127,10 @@ Este projeto pode ser usado em:
 - 🧪 Testes educacionais com sensores e IoT
 - 🚀 Prototipagem de sistemas embarcados
 
+## Contato
+
+📧 **Email**: jonielmendes237@gmail.com
+🔗 **LinkedIn**: [linkedin.com/in/joniel-mendes](https://www.linkedin.com/in/jonielmendes/)
 
 
 
