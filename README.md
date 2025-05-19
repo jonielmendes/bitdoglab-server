@@ -127,11 +127,88 @@ Este projeto pode ser usado em:
 - 🧪 Testes educacionais com sensores e IoT
 - 🚀 Prototipagem de sistemas embarcados
 
-  ## Para mais detalhes e resultados visuais, acesse o [Wiki](https://github.com/jonielmendes/bitdoglab-server/wiki/Monitoramento-IoT-com-Raspberry-Pi-Pico-e-ThingSpeak).
+# 🧠 Ideia do Projeto
+
+O projeto nasceu com o objetivo de explorar o uso do Raspberry Pi Pico (BitDogLab) em aplicações de IoT. A proposta era:
+
+- Monitorar **botões físicos** e **joystick**
+- Medir a **temperatura interna**
+- Exibir os dados via **servidor local**
+- Como desafio extra: **enviar os dados para a nuvem foi escolhido o (ThingSpeak) por ser grátis e fácil de usar**
+
+Além da leitura bruta dos sensores, foi implementado um sistema de **interpretação de direção (rosa dos ventos)** com o joystick, e visualizações gráficas em tempo real.
+
+O código foi escrito todo em **C**, sem bibliotecas de alto nível, utilizando diretamente o SDK oficial do RP2040 e a pilha TCP/IP LWIP.
+# 🌐 Visualização Local com Página HTML
+
+A primeira versão do projeto implementa um servidor local. A cada 1 segundo, os dados dos sensores são atualizados e exibidos em uma página HTML acessível via navegador.
+
+## Sensores Monitorados:
+- 🟢 Botões físicos (estado pressionado ou solto)
+- 🌡️ Temperatura interna (°C)
+- 🎮 Joystick (X, Y e direção interpretada)
+
+## Resultado:
 
 
-## Contato
 
+![Captura de tela 2025-05-10 024441](https://github.com/user-attachments/assets/1d2dff7f-5d6c-4439-af52-ae107869bd86)
+
+# ☁️ Integração com o ThingSpeak
+
+A segunda versão envia os dados para a nuvem usando o serviço ThingSpeak. A cada 15 segundos, os sensores são lidos e os dados são enviados via HTTP GET.
+
+## Campos Enviados:
+- field1: Botão A
+- field2: Botão B
+- field3: Temperatura 
+- field4: Eixo X do Joystick
+- field5: Eixo Y do Joystick
+
+## Resultados:
+
+- 📈 Temperatura em tempo real
+- 🧭 Direção do joystick com rosa dos ventos (via Math Visualization)
+- 🔴 Estado dos botões em gráfico digital
+
+
+![Captura de tela 2025-05-10 011456](https://github.com/user-attachments/assets/6da45d66-6e93-49a5-b7d9-95a2ecad4918)
+![Captura de tela 2025-05-10 170055](https://github.com/user-attachments/assets/7c11ee36-741f-4861-804b-b1f3104fcc72)
+![Captura de tela 2025-05-10 172014](https://github.com/user-attachments/assets/2177eadb-660a-4a8d-8de3-4651e7f7c71a)
+![Captura de tela 2025-05-10 011327](https://github.com/user-attachments/assets/98970607-5326-4116-8b22-33a29746dbee)
+
+# 🏭 Aplicação Simulada: Monitoramento Industrial
+
+Este projeto pode simular um sistema de monitoramento remoto de máquinas industriais:
+
+- ⚙️ Botões = estados da máquina (ligado/desligado, emergência)
+- 🌡️ Temperatura = sobreaquecimento
+- 🎮 Joystick = controle ou ajuste remoto
+
+### Benefícios:
+- Visualização em tempo real
+- Sem necessidade de hardware adicional
+- Possível integração com alertas e dashboards
+# ✅ Resultados Finais
+
+O projeto atendeu todos os objetivos e desafios:
+
+✔️ Conexão estável à rede Wi-Fi  
+✔️ Visualização dos dados localmente (HTML)  
+✔️ Integração com a nuvem (ThingSpeak)  
+✔️ Conversão da entrada do joystick para rosa dos ventos  
+✔️ Gráficos em tempo real
+
+
+![Captura de tela 2025-05-10 011355](https://github.com/user-attachments/assets/d870cd97-1b7c-47d2-810d-387f94d5697d)
+![Captura de tela 2025-05-10 011429](https://github.com/user-attachments/assets/8c48d8f5-0df5-4c16-a2f0-fea31e8ac44a)
+![Captura de tela 2025-05-10 011513](https://github.com/user-attachments/assets/357378e6-25ec-49dd-80d7-bc087182604a)
+![Captura de tela 2025-05-10 011529](https://github.com/user-attachments/assets/61cf84f8-69db-45be-9356-7d4b0ccb1793)
+
+> Resultado: um sistema de IoT completo, funcional e com potencial de uso real.
+
+
+### Contato
 📧 **Email**: jonielmendes237@gmail.com
 🔗 **LinkedIn**: [linkedin.com/in/joniel-mendes](https://www.linkedin.com/in/jonielmendes/)
 
